@@ -1,9 +1,9 @@
-# AGENT_PLAYBOOK.md — Как агент собирает презентацию из сценария
+# AGENT_PLAYBOOK.md — Как агент собирает видео/видео из сценария
 
 > Единая пошаговая инструкция для ИИ-агента: **на входе сценарий → на выходе готовая
-> презентация с озвучкой, таймлайном и слайдами.**
+> сцена с озвучкой, таймлайном и слайдами.**
 > Дополняет (не заменяет): `AGENTS.md` (правила компонентов §4.4, тайминги §8, скрипты §12),
-> `docs/PRESENTATION_PIPELINE.md` (этапы пайплайна), `docs/animation_guidelines.md` (анимации),
+> `docs/VIDEO_PIPELINE.md` (этапы пайплайна), `docs/animation_guidelines.md` (анимации),
 > `docs/TOKEN_SPEC.md` (цвета). При расхождении — приоритет у этого файла по процессу,
 > у `AGENTS.md` — по контрактам компонентов.
 
@@ -13,7 +13,7 @@
 
 Пользователь даёт **сценарий** (текст озвучки, разбитый на смысловые блоки). Агент:
 
-1. создаёт презентацию в нужной папке проекта;
+1. создаёт видео в нужной папке проекта;
 2. озвучивает её через Gemini TTS (голос + пресеты по блокам);
 3. строит `audio_timeline` (4 дорожки, BGM);
 4. ставит `EndMarkerSlide` — якорь конца видео;
@@ -77,12 +77,12 @@
 ### Шаг 1 — Разобрать сценарий
 Определить: тип (шортс/длинное), блоки, ключевые цифры/факты (они попадут в ReceiptCard, AnimatedStats, StatsBarChart и должны совпадать с озвучкой).
 
-### Шаг 2 — Создать презентацию
+### Шаг 2 — Создать видео
 ```
 POST /presentations/
 { "title": "<заголовок>", "folder_id": 2 }   # 2 = Шортсы, 1 = Длинные
 ```
-Ответ → `id` презентации (далее `PRES_ID`).
+Ответ → `id` видео (далее `PRES_ID`).
 
 ### Шаг 3 — TTS (озвучка) по блокам
 **1 вызов на смысловой блок** (не на предложение). Внутри блока — непрерывный поток,
@@ -99,7 +99,7 @@ POST /ai/presentations/{PRES_ID}/generate-speech
   "tone":  "<из пресета блока>",
   "scene": "A high-end tech YouTube channel for IT2B — business automation and AI.",
   "temperature": 0.9,                 # hook 0.9, остальные 0.8
-  "batch_id": "short_<N>_<timestamp>" # общий для всех клипов презентации
+  "batch_id": "short_<N>_<timestamp>" # общий для всех клипов видео
 }
 ```
 Ответ → `MediaFile` с `file_path` (напр. `/media/ai_voice_xxx.wav`) и `id`.
@@ -266,18 +266,18 @@ GET /ai/audio-duration?file_path=/media/ai_voice_xxx.wav
 - `BrowserMockup`: slug без `Slide`, `type:"html"`, content = реальный UI с адаптивом.
 - `CrmCardSlide`: `field_icon`/`field_color` (не `icon`), кнопка — `text` (не `label`).
 
-> Полный справочник — `AGENTS.md` §4.4 и `docs/PRESENTATION_PIPELINE.md` §«Критические правила».
+> Полный справочник — `AGENTS.md` §4.4 и `docs/VIDEO_PIPELINE.md` §«Критические правила».
 
 ---
 
 ## 6. Скрипты и команды (cheatsheet)
 
 ```
-# 1) Сценарий → презентация + TTS + timeline + EndMarker (БЕЗ слайдов!)
+# 1) Сценарий → видео + TTS + timeline + EndMarker (БЕЗ слайдов!)
 docker compose exec backend python scripts/generate_short.py --file scripts/_inbox/short03.txt --title "Мой шортс"
 docker compose exec backend python scripts/generate_short.py --short 2        # встроенный сценарий
 
-# 2) Переозвучка существующей презентации (слайды ремапятся, payload сохраняется)
+# 2) Переозвучка существующего видео (слайды ремапятся, payload сохраняется)
 docker compose exec backend python scripts/revoice_from_file.py --pres-id 16 --file scripts/_inbox/shorts02.txt
 #   --gap 200     пауза между блоками
 #   --speedup 1.2 ffmpeg atempo (ускорение)
@@ -288,7 +288,7 @@ docker compose exec backend python scripts/build_shorts20_slides.py
 # 4) Любая правка/проверка — через API (см. §3)
 ```
 
-**⚠️ `generate_short.py` НЕ создаёт контентные слайды.** Он делает шаги 2–6 (презентация,
+**⚠️ `generate_short.py` НЕ создаёт контентные слайды.** Он делает шаги 2–6 (видео,
 озвучка, `audio_timeline`, `EndMarkerSlide`). Слайды (шаг 7) строятся отдельным скриптом
 (`build_shorts*_slides.py`) или руками через API. Это главная причина пустого «шортса из коробки».
 
@@ -309,7 +309,7 @@ python scripts/seed_manifests.py
   `min_items`, `max_items`, `non_monotonic_start_time`; при `strict` — `unknown_field`.
 - **warnings** (не блокируют, но правим): `no-hex`, `accent-budget` (>4 акцентов),
   `dense_timing` (0 < gap < 800 мс), при сохранении слайда ещё `low-contrast`.
-- **preset-lock**: если у презентации `style_lock=true`, слайд вне вектора пресета → 422.
+- **preset-lock**: если у видео `style_lock=true`, слайд вне вектора пресета → 422.
   Пресеты: `it2b-tech`, `history-classic`, `derevnya-eco` (rules `{max_accents:4, title_em:true}`).
 
 ---
@@ -340,7 +340,7 @@ python scripts/seed_manifests.py
 
 ## 10. Чек-лист перед сдачей
 
-- [ ] Презентация создана в нужной папке проекта.
+- [ ] Видео создана в нужной папке проекта.
 - [ ] Озвучка: 1 клип на блок, пресеты по таблице, общий `batch_id`.
 - [ ] `audio_timeline`: 4 дорожки, BGM на 15%, паузы 200 мс между блоками.
 - [ ] `EndMarkerSlide` стоит на конце дорожки озвучки, без payload.

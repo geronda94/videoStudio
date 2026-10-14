@@ -71,7 +71,7 @@ payload; глубокая ссылка — на `project_revisions.id`. Лими
 
 ### 2.1 Разграничение (устраняет дрейф)
 - **`project_revisions` — источник истины для отката** (контент проекта).
-- **`presentation_revisions` — op-log** для аудита/истории правок презентации; **снапшоты из неё
+- **`presentation_revisions` — op-log** для аудита/истории правок видео; **снапшоты из неё
   убираем** (миграция: перестаём писать `snapshot`, поле оставляем nullable для легаси).
   Двойного хранения нет.
 
@@ -94,7 +94,7 @@ payload; глубокая ссылка — на `project_revisions.id`. Лими
   (project meta, brief, config, folders, presentations, slides+payloads, tokens).
 - **Исключено:** `project_members`, владение, API-ключи, рендеры — их откат не выполняется
   (иначе воскрешение прав/персон). Это отдельные административные действия.
-- Батчинг по презентациям, чтобы не держать гигантскую транзакцию; каждая партия атомарна,
+- Батчинг по видео, чтобы не держать гигантскую транзакцию; каждая партия атомарна,
   общий прогресс — в audit/outbox. Восстановление создаёт новую ревизию `source=restore`.
 
 ### 2.5 Concurrency (optimistic locking)
@@ -305,7 +305,7 @@ POST /ai/runs {project_id, agent, model, base_version}
      outbox не копится без webhook.
    - **Второй раунд ревью (DONE):** делегирование с project-scope снова проверяется; restore
      снимает `scope_folder_id` и slide-scope токены (FK-безопасность); `create_revision` с
-     retry и пересчётом `n`; `diff` не считает презентацию изменённой из-за слайдов;
+     retry и пересчётом `n`; `diff` не считает видео изменённой из-за слайдов;
      ретеншен `idempotency_keys`; dev-байпас в аудит-роутере.
    - **Отложено (инфраструктура/оптимизация, осознанно):** партиции `audit_log` по месяцам,
      алерты на аномалии, rate-limit в Redis (сейчас in-memory), `content_blobs`
@@ -316,7 +316,7 @@ POST /ai/runs {project_id, agent, model, base_version}
 | Риск | Митигация |
 |---|---|
 | Overhead транзакционного аудита | один INSERT в той же транзакции, партиции, outbox для sink |
-| Долгий restore | батчинг по презентациям, dry_run, прогресс |
+| Долгий restore | батчинг по видео, dry_run, прогресс |
 | Раздувание базы | content-addressed dedup, checkpoints+дельты, ретеншен |
 | Имперсонация | consent-модель (approve subject), аудит, уведомления |
 | Эскалация бота | bot-cap (нет style/team/transfer), transfer на бота запрещён |

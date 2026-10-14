@@ -1,4 +1,7 @@
-# Генерация презентаций из сценариев — Инструкция для ИИ-агента
+# Генерация видео из сценариев — Инструкция для ИИ-агента
+
+> Пайплайн унаследован от движка презентаций: «видео» здесь — это будущая **сцена**
+> (код и API пока используют имя `presentations`, см. Фазу 7 в `docs/ROADMAP.md`).
 
 ## Обзор пайплайна
 
@@ -123,7 +126,7 @@ POST http://localhost:8001/ai/presentations/{presentation_id}/generate-speech
 
 ### Важно
 - Каждая секция → отдельный TTS-вызов
-- `batch_id` общий для всех клипов презентации
+- `batch_id` общий для всех клипов видео
 - TTS возвращает MediaFile с `file_path` (напр. `/media/ai_voice_xxx.wav`)
 
 ---
@@ -393,10 +396,10 @@ POST http://localhost:8001/presentations/{id}/slides
 ## Быстрый старт (для нового шортса)
 
 ```bash
-# 1. Создать презентацию + TTS + timeline
+# 1. Создать видео + TTS + timeline
 docker compose exec backend python scripts/generate_short.py --short N
 
-# 2. Переозвучить существующую презентацию из .txt файла
+# 2. Переозвучить существующее видео из .txt файла
 docker compose exec backend python scripts/revoice_from_file.py --pres-id N --file scripts/_inbox/text.txt
 
 # 3. Транскрибировать PROOF (самую длинную секцию)

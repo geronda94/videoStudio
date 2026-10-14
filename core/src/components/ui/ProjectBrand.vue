@@ -9,7 +9,7 @@ import MediaLibraryModal from './MediaLibraryModal.vue'
 const props = defineProps({
   projectId: { type: Number, required: true },
   canEdit: { type: Boolean, default: false },
-  // Первая презентация проекта — нужна медиатеке (она работает в разрезе презентации).
+  // Первая видео проекта — нужна медиатеке (она работает в разрезе видео).
   presentationId: { type: Number, default: 0 },
 })
 
@@ -159,7 +159,7 @@ const save = async () => {
     <h2 class="text-lg font-bold text-gray-900 mb-1">Бренд проекта</h2>
     <p class="text-sm text-gray-500 mb-4">
       Лого, QR и контакты подставляются в компоненты автоматически (например, OutroSlide),
-      если слайд не задал своё. Не нужно дублировать в каждой презентации.
+      если слайд не задал своё. Не нужно дублировать в каждой видео.
     </p>
     <p v-if="!canEdit" class="text-xs text-amber-600 mb-4">
       Менять бренд проекта может только владелец.
@@ -236,7 +236,7 @@ const save = async () => {
         </div>
         <input v-model="audio.volume" type="number" step="0.05" min="0" max="1" placeholder="volume 0.15" class="border border-gray-200 rounded-xl px-3 py-2 text-sm outline-none focus:border-blue-500" />
       </div>
-      <p class="text-[11px] text-gray-400 mt-1">BGM подкладывается в новые презентации проекта, если у них ещё нет таймлайна.</p>
+      <p class="text-[11px] text-gray-400 mt-1">BGM подкладывается в новые видео проекта, если у них ещё нет таймлайна.</p>
 
       <div class="mt-3 flex flex-wrap gap-4 items-center text-xs">
         <img v-if="form.logo" :src="form.logo" class="h-10 object-contain" alt="logo preview" />

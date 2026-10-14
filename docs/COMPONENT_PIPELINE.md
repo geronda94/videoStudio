@@ -1,6 +1,6 @@
 # COMPONENT_PIPELINE.md — механизм создания компонентов (для ИИ-агента)
 
-> Канон создания нового компонента презентаций. Цель — предсказуемый, повторяемый
+> Канон создания нового компонента видео. Цель — предсказуемый, повторяемый
 > конвейер, пригодный для автоматизации ИИ: минимум импровизации, максимум правил,
 > проверяемый результат на каждом шаге.
 >
@@ -19,7 +19,7 @@
 5. examples       scripts/generate_examples.py           (example из /p/4 или default_payload)
 6. manifests      scripts/seed_manifests.py              (description, manifest, required)
 7. validate       POST /components/{slug}/validate?lint=true  → 0 errors
-8. visual         слайд в тестовой презентации → рендер без ошибок
+8. visual         слайд в тестовом видео → рендер без ошибок
 ```
 
 Порядок обязателен: `seed_components → generate_schemas → generate_examples → seed_manifests`.
@@ -150,7 +150,7 @@ POST /components/{slug}/validate?lint=true   {"payload": {…default_payload…}
 поправить: токены вместо hex, ≤4 акцентов, шаг ≥ 800 мс.
 
 ### Шаг 10. Визуальная приёмка
-Добавь слайд с компонентом в тестовую презентацию (payload + `variant`), открой
+Добавь слайд с компонентом в тестовое видео (payload + `variant`), открой
 `/p/{id}` и убедись, что рендер корректен (в т.ч. мобильный вид).
 
 ---
@@ -253,7 +253,7 @@ SVG `<animate>`/`<animateMotion>`. Иначе покадровый/видео-р
 - [ ] `check_consistency.py` (с хоста): registry == db == .vue, без дрейфа.
 - [ ] `POST /components/MyThing/validate?lint=true` → `valid: true`, `errors: []`.
 - [ ] `default_payload` / `example` / `manifest` / `required` в БД заполнены.
-- [ ] Слайд в тестовой презентации рендерится (desktop + mobile), без ошибок в консоли.
+- [ ] Слайд в тестовом видео рендерится (desktop + mobile), без ошибок в консоли.
 - [ ] Анимации детерминированы (нет rAF/infinite/`<animate>`).
 - [ ] Цвета — токены; вариант отвечает только за форму.
 - [ ] `p4`/`p13` (эталонные) не сломаны, счётчик компонентов в докax обновлён.
@@ -273,7 +273,7 @@ SVG `<animate>`/`<animateMotion>`. Иначе покадровый/видео-р
 - **`generate_examples.py`** берёт пример из `/p/4`; для новых компонентов — fallback
   на `default_payload` (это нормально).
 - **Пустой `video_url`** в `AdvancedVideoSlide` → `AdvancedVideoPlayer` спамит
-  warning «no supported sources» каждый кадр. В демо-презентациях задавай видео
+  warning «no supported sources» каждый кадр. В демо-видео задавай видео
   или чини гард в плеере.
 - **`background-position` для анимации** → paint per frame в программном рендере.
   Используй `transform: translateX()` через overlay-элемент с `will-change: transform`.

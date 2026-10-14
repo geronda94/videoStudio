@@ -23,7 +23,7 @@ const canManageProject = computed(() =>
   !!currentUser.value &&
   (currentUser.value.is_superadmin || project.value?.owner_id === currentUser.value.id),
 )
-// Первая презентация проекта — для медиатеки в «Бренде проекта».
+// Первая видео проекта — для медиатеки в «Бренде проекта».
 const firstPresentationId = computed(() => {
   for (const f of project.value?.folders || []) {
     for (const p of f.presentations || []) return p.id
@@ -287,7 +287,7 @@ const removeToken = async (t) => {
 
 const applyDefaultVariant = async () => {
   // Настройки проекта = применяется ко всему проекту сразу: дефолт для новых
-  // + все существующие презентации (слайды со своим variant не трогаем).
+  // + все существующие видео (слайды со своим variant не трогаем).
   if (!project.value?.id || variantSaving.value) return
   variantSaving.value = true
   try {

@@ -61,7 +61,7 @@
             </div>
             
             <div class="flex bg-bg-hover p-1 rounded-xl border border-text-muted shrink-0">
-              <button @click="isGlobal = false" :class="['px-4 py-1.5 rounded-lg text-xs font-bold transition-all', !isGlobal ? 'bg-bg-surface text-text-primary shadow-sm' : 'text-text-secondary hover:text-text-primary']">Эта презентация</button>
+              <button @click="isGlobal = false" :class="['px-4 py-1.5 rounded-lg text-xs font-bold transition-all', !isGlobal ? 'bg-bg-surface text-text-primary shadow-sm' : 'text-text-secondary hover:text-text-primary']">Это видео</button>
               <button @click="isGlobal = true" :class="['px-4 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-2', isGlobal ? 'bg-color-secondary text-white shadow-sm' : 'text-text-secondary hover:text-white']">
                 <svg v-if="loadingGlobal" class="animate-spin" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg>
                 Весь проект
@@ -89,7 +89,7 @@
           </div>
           <div v-else-if="groupedMediaFiles.length === 0 && libraryFilter === 'all'" class="flex-1 flex flex-col items-center justify-center text-text-muted min-h-[300px]">
             <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="mb-4"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
-            <p>{{ isGlobal ? 'В этом проекте пока нет медиафайлов.' : 'В этой презентации пока нет медиафайлов.' }}</p>
+            <p>{{ isGlobal ? 'В этом проекте пока нет медиафайлов.' : 'В этом видео пока нет медиафайлов.' }}</p>
             <p class="text-sm mt-1">Перетащите файлы сюда или загрузите по ссылке</p>
           </div>
           <div v-else-if="groupedMediaFiles.length === 0" class="flex-1 flex flex-col items-center justify-center text-text-muted min-h-[300px]">
@@ -375,7 +375,7 @@ watch(() => props.isOpen, (open) => {
   loadGlobal(true)
 }, { immediate: true })
 
-// Смена презентации при открытой модалке (переход по папкам).
+// Смена видео при открытой модалке (переход по папкам).
 watch(() => props.presentationId, () => {
   if (props.isOpen) {
     globalMediaFiles.value = []

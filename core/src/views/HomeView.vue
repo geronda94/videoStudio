@@ -136,7 +136,7 @@ const getDisplayColors = (projectId) => {
         </h1>
 
         <p class="text-lg md:text-xl text-gray-500 max-w-2xl font-light leading-relaxed">
-          Центральный пульт управления. Выберите проект, чтобы начать работу с папками и презентациями.
+          Центральный пульт управления. Выберите проект, чтобы начать работу с папками и видео.
         </p>
       </header>
 
@@ -157,7 +157,7 @@ const getDisplayColors = (projectId) => {
           </li>
           <li class="flex gap-2 items-start">
             <span class="w-6 h-6 rounded-full bg-blue-50 text-blue-600 font-bold flex items-center justify-center shrink-0">3</span>
-            <span class="text-gray-600">Создайте презентацию и слайды (или через «✨ AI»)</span>
+            <span class="text-gray-600">Создайте видео и слайды (или через «✨ AI»)</span>
           </li>
           <li class="flex gap-2 items-start">
             <span class="w-6 h-6 rounded-full bg-blue-50 text-blue-600 font-bold flex items-center justify-center shrink-0">4</span>

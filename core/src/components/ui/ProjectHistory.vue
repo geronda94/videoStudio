@@ -123,7 +123,7 @@ const sourceLabel = (src) => ({
         <div v-if="!diff" class="text-sm text-gray-400">Считаю изменения…</div>
         <div v-else class="text-sm text-gray-700 space-y-1">
           <div>Слайды: <b>+{{ diff.slides?.added || 0 }}</b> / <b>−{{ diff.slides?.removed || 0 }}</b> / <b>~{{ diff.slides?.changed || 0 }}</b></div>
-          <div>Презентации: +{{ (diff.presentations?.added || []).length }} / −{{ (diff.presentations?.removed || []).length }} / ~{{ (diff.presentations?.changed || []).length }}</div>
+          <div>Видео: +{{ (diff.presentations?.added || []).length }} / −{{ (diff.presentations?.removed || []).length }} / ~{{ (diff.presentations?.changed || []).length }}</div>
           <div>Папки: +{{ (diff.folders?.added || []).length }} / −{{ (diff.folders?.removed || []).length }} / ~{{ (diff.folders?.changed || []).length }}</div>
         </div>
         <button v-if="canEdit" @click="doRestore" :disabled="busy || !diff"

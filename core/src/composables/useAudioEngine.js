@@ -1,9 +1,9 @@
 import { ref, watch } from 'vue'
 
 // Кэш HTMLAudioElement. Ключ — SRC, а не clipId: clip.id генерируются как
-// block_0/block_1 и ПОВТОРЯЮТСЯ между презентациями. Если ключевать по clipId,
-// для новой презентации возвращался элемент со СТАРЫМ src — и играла озвучка
-// предыдущей презентации (баг «перешёл на другую — звучит та же озвучка»).
+// block_0/block_1 и ПОВТОРЯЮТСЯ между видео. Если ключевать по clipId,
+// для новой видео возвращался элемент со СТАРЫМ src — и играла озвучка
+// предыдущей видео (баг «перешёл на другую — звучит та же озвучка»).
 const audioInstances = new Map() // src -> HTMLAudioElement
 const durationCache = new Map() // src -> duration ms
 
@@ -93,8 +93,8 @@ export function useAudioEngine() {
   let lastEngineTime = -1
 
   const loadTimeline = (timelineConfig, virtualClips = []) => {
-    // Смена презентации/таймлайна: глушим всё, что звучало по прошлому таймлайну,
-    // иначе старые клипы (с теми же clip.id) продолжают играть в новой презентации.
+    // Смена видео/таймлайна: глушим всё, что звучало по прошлому таймлайну,
+    // иначе старые клипы (с теми же clip.id) продолжают играть в новой видео.
     stopAll()
     lastEngineTime = -1
     let clonedConfig = { tracks: [] }

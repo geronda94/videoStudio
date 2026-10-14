@@ -38,7 +38,7 @@
           <button
             @click="isSidebarOpen = false; $emit('open-settings')"
             class="text-text-secondary hover:text-text-primary p-1.5 rounded hover:bg-bg-surface transition-colors"
-            title="Настройки презентации (Аудио, Тема)"
+            title="Настройки видео (Аудио, Тема)"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -223,7 +223,7 @@
                       : 'text-text-secondary'
                   "
                 >
-                  Конец презентации
+                  Конец видео
                 </div>
                 <div
                   v-if="
@@ -507,12 +507,12 @@
             </svg>
           </button>
 
-          <!-- Настройки презентации (тема/вариант/доступ) — прямой доступ на десктопе -->
+          <!-- Настройки видео (тема/вариант/доступ) — прямой доступ на десктопе -->
           <button
             v-if="canEdit"
             @click="$emit('open-settings')"
             class="text-text-secondary hover:text-text-primary transition-colors"
-            title="Настройки презентации"
+            title="Настройки видео"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -667,7 +667,7 @@
           <button v-if="canEdit"  @click="showMore = false; $emit('quick-render', 'landscape')" class="text-left px-4 py-3 rounded-lg text-sm text-text-primary hover:bg-bg-surface-hover flex items-center gap-3"><Icon icon="lucide:monitor" class="w-5 h-5 shrink-0 text-text-secondary" /> Ландшафт 1920×1280</button>
           <button v-if="canEdit"  @click="showMore = false; $emit('open-media-library')" class="text-left px-4 py-3 rounded-lg text-sm text-text-primary hover:bg-bg-surface-hover flex items-center gap-3"><Icon icon="lucide:image" class="w-5 h-5 shrink-0 text-text-secondary" /> Медиа-библиотека</button>
           <button v-if="isAudioLoaded" @click="toggleAudioMute(); showMore = false" class="text-left px-4 py-3 rounded-lg text-sm text-text-primary hover:bg-bg-surface-hover flex items-center gap-3"><Icon :icon="isAudioMuted ? 'lucide:volume-2' : 'lucide:volume-x'" class="w-5 h-5 shrink-0 text-text-secondary" /> {{ isAudioMuted ? 'Включить звук' : 'Выключить звук' }}</button>
-          <button v-if="canEdit"  @click="showMore = false; $emit('open-settings')" class="text-left px-4 py-3 rounded-lg text-sm text-text-primary hover:bg-bg-surface-hover flex items-center gap-3"><Icon icon="lucide:settings" class="w-5 h-5 shrink-0 text-text-secondary" /> Настройки презентации</button>
+          <button v-if="canEdit"  @click="showMore = false; $emit('open-settings')" class="text-left px-4 py-3 rounded-lg text-sm text-text-primary hover:bg-bg-surface-hover flex items-center gap-3"><Icon icon="lucide:settings" class="w-5 h-5 shrink-0 text-text-secondary" /> Настройки видео</button>
           <button v-if="canEdit"  @click="showMore = false; $emit('open-ai')" class="text-left px-4 py-3 rounded-lg text-sm text-text-primary hover:bg-bg-surface-hover flex items-center gap-3"><Icon icon="lucide:sparkles" class="w-5 h-5 shrink-0 text-brand-blue" /> AI-ассистент</button>
           <div class="h-px bg-bg-surface-hover my-1"></div>
           <button @click="showMore = false; toggleMobileMode()" class="text-left px-4 py-3 rounded-lg text-sm text-text-primary hover:bg-bg-surface-hover flex items-center gap-3"><Icon icon="lucide:tablet-smartphone" class="w-5 h-5 shrink-0 text-text-secondary" /> Мобильный вид {{ forceMobile ? '— выкл' : '— вкл' }}</button>
@@ -725,7 +725,7 @@
           </svg>
         </div>
         <h2 class="text-2xl font-bold text-text-primary mb-2 tracking-wide">
-          Запустить презентацию
+          Запустить видео
         </h2>
         <p class="text-text-secondary text-sm">
           Нажмите в любом месте, чтобы начать

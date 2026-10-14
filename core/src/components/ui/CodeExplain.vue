@@ -16,7 +16,7 @@ const props = withDefaults(defineProps<{
  mobile: false
 })
 
-// Резолвим variant: payload → provide из презентации → дефолт 'tech'
+// Резолвим variant: payload → provide из видео → дефолт 'tech'
 const defaultVariant = inject<Ref<string | null>>('defaultVariant', ref(null))
 const resolvedVariant = computed(() => {
  const v = (typeof props.variant === 'object' ? props.variant?.value : props.variant)

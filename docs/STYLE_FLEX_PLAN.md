@@ -1,6 +1,6 @@
 # План: гибкие стили + премиальный вид + защита от поломок ИИ
 
-> 2026-09-17. Цель: презентации гибкие (пресеты/темы/моушн), выглядят премиально
+> 2026-09-17. Цель: видео гибкие (пресеты/темы/моушн), выглядят премиально
 > (консистентный моушн, типографика, свет/стекло), ИИ не ломает (линт + локи + сиды не затирают).
 > Порядок: P0 → P1 → P2 → P3 → P4 → P5.
 
@@ -58,10 +58,10 @@
 4. API: `GET/POST /presets/`, `DELETE /presets/{slug}` (только custom, иначе 403),
    `GET/PUT /presentations/{id}/style` (400 на битые ссылки); `POST /variants/` ставит `is_custom=True`.
 5. `seed_presets.py`: `it2b-tech/history-classic/derevnya-eco` (palette+variant+rules), P0-конвенция.
-6. UI: бейдж пресета + пикер + лок — в шапке `SlideEditorModal` (контекст презентации;
+6. UI: бейдж пресета + пикер + лок — в шапке `SlideEditorModal` (контекст видео;
    `api.js`: `fetchPresets/fetchPresentationStyle/updatePresentationStyle`;
    `MainPresentation`: `editorPreset`, fetch при открытии, `@update-style`).
-   Пикер в `ProjectView` не делали осознанно: пресет назначается презентации, а не проекту.
+   Пикер в `ProjectView` не делали осознанно: пресет назначается видео, а не проекту.
 7. Приёмка: presets 3/3; lock p4 → bad-variant 422, no-em 422, good 200; cleanup (пробы удалены,
    p4 = 30 слайдов, unlocked); фронт 200.
 8. Инциденты: rules без ключа `variant` в сиде (лечилось мержем в enforcement);
@@ -196,7 +196,7 @@ UI пикер/бейдж: проводка ревью (open→fetch style→prop
 
 ## P5-план (исходный, ниже)
 
-1. `scripts/generate_preview.py`: презентации «Регрессия стилей» — все 30 компонентов ×
+1. `scripts/generate_preview.py`: видео «Регрессия стилей» — все 30 компонентов ×
    3 дефолтных варианта (3 презы: tech/classic/derevnya). Ручной визуальный проход по чеклисту
    (док): контраст, лес/глоу подложки, тинты, тайминги.
 2. `TOKEN_SPEC.md` — новые секции (motion, type, presets); `AGENTS.md` — шаги workflow 0 (пресет),

@@ -1,7 +1,11 @@
-# AGENTS.md — Руководство для ИИ-агентов по созданию презентаций
+# AGENTS.md — Руководство для ИИ-агентов по VideoStudio
 
-Единый актуальный справочник по движку презентаций. Написан для ИИ-агентов, которые
-генерируют данные презентаций. Здесь — только то, что правда в текущем коде.
+Единый актуальный справочник по движку **VideoStudio**. Проект — форк движка презентаций,
+который превращается в видеостудию (human+AI): единица контента эволюционирует от *слайда*
+к *сцене-композиции из слоёв*. Здесь — только то, что правда в текущем коде.
+
+> 🎯 План развития и фазы — [`docs/ROADMAP.md`](docs/ROADMAP.md). В коде и БД пока остаются
+> унаследованные имена (`presentations`, `slides`, `/presentations/`) — см. Фазу 7 роадмапа.
 
 **Главное правило:** не угадывай структуру данных. Спрашивай API. Библиотека компонентов
 отдаёт всё: `payload_schema` (типы полей), `example` (живой пример), `manifest` (когда использовать).
@@ -16,18 +20,18 @@
 
 ## 1. Что это и как запущено
 
-Конструктор презентаций. Стек:
+Видеостудия (форк движка презентаций). Стек:
 
 | Слой | Технология | Порт |
 |------|-----------|------|
-| БД | PostgreSQL (db `presentation_db`) | `5435` |
-| Backend | FastAPI (Python) | `8001` |
-| Frontend | Vue 3 + Vite + Tailwind | `5174` |
+| БД | PostgreSQL (db `videostudio_db`) | `5437` |
+| Backend | FastAPI (Python) | `8002` |
+| Frontend | Vue 3 + Vite + Tailwind | `5175` |
 
-- Запуск: `docker compose up` (compose-проект `presentation-saas`).
-- Frontend доступен на `http://localhost:5174`, API напрямую на `http://localhost:8001`.
+- Запуск: `docker compose up` (compose-проект `videostudio-saas`).
+- Frontend доступен на `http://localhost:5175`, API напрямую на `http://localhost:8002`.
 - Frontend проксирует `/api/*`, `/uploads/*`, `/media/*` на backend (`vite.config.js`).
-- Примеры живых презентаций: `http://localhost:5174/p/10` (IT2B, тёмная), `http://localhost:5174/p/11` (историческая, светлая).
+- Примеры живых видео (будущих сцен): `http://localhost:5175/p/10` (IT2B, тёмная), `http://localhost:5175/p/11` (историческая, светлая).
 
 Код: `backend/` (FastAPI + SQLAlchemy), `core/` (Vue), `scripts/` (сиды и генераторы).
 
@@ -36,15 +40,15 @@
 ## 2. Модель данных (БД)
 
 > Полный справочник по таблицам, связям и осям классификации — `docs/DATABASE.md`.
-> Ниже — краткая выжимка для генерации презентаций.
+> Ниже — краткая выжимка для генерации видео.
 
-Таблицы, важные для генерации презентаций:
+Таблицы, важные для генерации видео:
 
 | Таблица | Что хранит | Ключевые поля |
 |---------|-----------|---------------|
-| `projects` | проект (набор презентаций + тема) | `slug`, `title` |
-| `folders` | папка (привязка проекта к презентациям) | `slug`, `title`, `project_id`, `theme` |
-| `presentations` | презентация | `title`, `audio_timeline`, `variant` (дефолтный вариант отрисовки) |
+| `projects` | проект (набор видео + тема) | `slug`, `title` |
+| `folders` | папка (привязка проекта к видео) | `slug`, `title`, `project_id`, `theme` |
+| `presentations` | видео | `title`, `audio_timeline`, `variant` (дефолтный вариант отрисовки) |
 | `slides` | слайд | `slide_id` (строка, уникальна), `component` (slug), `start_time` (мс, float), `order_index`, `title`, `subtitle`, `layout` |
 | `slide_data` | payload слайда (JSON) | `payload` |
 | `components` | библиотека компонентов | `slug`, `title`, `description`, `default_payload`, `payload_schema`, `example`, `manifest` |
@@ -352,7 +356,7 @@ payload «как есть» (в коде принят snake_case, Vue прини
 
 ### 8.2 Финальный технический слайд
 
-- **EndMarkerSlide ставится ВСЕГДА последним, без payload.** Презентация без маркера = некорректный конец видео.
+- **EndMarkerSlide ставится ВСЕГДА последним, без payload.** Видео без маркера = некорректный конец видео.
 - **Если на таймлайне есть озвучка** (трек озвучки `main` / `voiceover`, обычно `tracks[0]`):
   `EndMarker.start_time` = **ровно конец последнего клипа озвучки** (`clip.start_time + длительность`).
   Ориентир — **дорожка озвучки (трек 1), НЕ фоновая музыка** (трек `overlay`/BGM — она длиннее и не якорь).
@@ -365,7 +369,7 @@ payload «как есть» (в коде принят snake_case, Vue прини
 
 ### 8.3 Общие правила таймлайна
 
-- **Глобальный таймлайн:** каждый слайд имеет `start_time` (мс, от начала презентации).
+- **Глобальный таймлайн:** каждый слайд имеет `start_time` (мс, от начала видео).
   **Слайды СТРОГО не налезают друг на друга:** `start_time(N+1) > start_time(N)`,
   проверка перед сохранением: `start_time(N+1) − start_time(N) ≥ 2000`.
 - **Минимальная дистанция между стартами соседних слайдов — 2000 мс. Без исключений**
@@ -420,7 +424,7 @@ payload «как есть» (в коде принят snake_case, Vue прини
   `var(--type-body)` с fallback на текущие классы (`text-4xl`/`text-lg`), tech-значения равны
   текущим — tech попиксельно не меняется.
 - В Tailwind цвета/шрифты заведены как `bg-bg-base`, `text-text-primary`, `border-text-muted`, `bg-brand-*` и т.д.
-- **Второй проект `history` (id=2)** имеет светлую «бумажную» тему (серифные шрифты). Презентация `/p/11` — пример.
+- **Второй проект `history` (id=2)** имеет светлую «бумажную» тему (серифные шрифты). Видео `/p/11` — пример.
 - API: `GET/PUT /projects/{id}/tokens`, `GET /presentations/{id}/tokens`.
 - Заполнение: `scripts/seed_tokens.py`.
 
@@ -444,7 +448,7 @@ payload «как есть» (в коде принят snake_case, Vue прини
   Обработка `<em>` (градиент `brand-light-blue → brand-blue`) — глобальная, не зависит от
   варианта: смена classic/industrial не должна «сплющивать» её в сплошной цвет.
 - `tech` — глобально «сплошные карточки» (solid), стекло только у `ArchitectureDiagram` через per-component override (`components.ArchitectureDiagram`).
-- **Резолв варианта слайда** (приоритет): `payload.variant` → `presentation.variant` (дефолт презентации, поле `variant`) → `tech`. Т.е. у презентации можно задать дефолт (напр. `classic` для исторической), и все слайды без явного `variant` его наследуют.
+- **Резолв варианта слайда** (приоритет): `payload.variant` → `presentation.variant` (дефолт видео, поле `variant`) → `tech`. Т.е. у видео можно задать дефолт (напр. `classic` для исторической), и все слайды без явного `variant` его наследуют.
 
 ### 10.2 Единый формат `config`
 
@@ -568,18 +572,18 @@ const { itemVars, itemPrimaryVars, line } = useVariant(computed(() => props.vari
 |--------|-----------|
 | `scripts/seed_components.py` | пересоздаёт таблицу `components` и заливает 32 компонента (с `default_payload`) |
 | `scripts/generate_schemas.py` | генерирует `payload_schema` (типы + min/max_items + enum, включая enum `variant` из `style_variants`) |
-| `scripts/generate_examples.py` | генерирует `example` (из живой презентации `/p/4`) |
+| `scripts/generate_examples.py` | генерирует `example` (из живого видео `/p/4`) |
 | `scripts/seed_manifests.py` | заполняет `description` + `manifest` + `required` |
 | `scripts/seed_tokens.py` | глобальные токены + проект `history` |
 | `scripts/seed_variants.py` | варианты отрисовки `style_variants` |
 | `scripts/check_consistency.py` | сверка `components.slug ↔ componentsMap ↔ .vue` (запуск с хоста, exit 1 при дрейфе) |
-| `scripts/generate_short.py` | 🔒 LOCKED — из сценария: презентация + TTS + `audio_timeline` + `EndMarkerSlide`. **Слайды НЕ создаёт** (см. ниже / `docs/AGENT_PLAYBOOK.md`) |
-| `scripts/revoice_from_file.py` | переозвучка существующей презентации из .txt файла (слайды ремапятся) |
+| `scripts/generate_short.py` | 🔒 LOCKED — из сценария: видео + TTS + `audio_timeline` + `EndMarkerSlide`. **Слайды НЕ создаёт** (см. ниже / `docs/AGENT_PLAYBOOK.md`) |
+| `scripts/revoice_from_file.py` | переозвучка существующего видео из .txt файла (слайды ремапятся) |
 | `scripts/build_shorts20_slides.py` | шаблон сборки контентных слайдов: массив `SLIDES` → `validate` → `POST /slides` |
 | `scripts/trim_payload_text.py` | обрезка длинных текстов payload под бюджет «воздуха» (`source_note` ≤80, `description` ≤90, `subtitle` ≤60) |
 
-> **Полный процесс «сценарий → готовая презентация» (озвучка, таймлайн, данные, слайды) —
-> `docs/AGENT_PLAYBOOK.md`.** Это главная инструкция агента по созданию презентаций.
+> **Полный процесс «сценарий → готовое видео» (озвучка, таймлайн, данные, слайды) —
+> `docs/AGENT_PLAYBOOK.md`.** Это главная инструкция агента по созданию видео.
 
 ### 🔒 Базовый шаблон шортсов (locked, p/16 calibration)
 
@@ -614,7 +618,7 @@ python scripts/seed_manifests.py
 
 ---
 
-## 13. Рабочий процесс ИИ-агента (как создавать презентацию)
+## 13. Рабочий процесс ИИ-агента (как собирать контент)
 
 0. **Выбрать вектор**: `GET /presets/` → назначь пресет (`PUT /presentations/{id}/style`).
    Все слайды — в его варианте и правилах; с `style_lock=true` выход за вектор = 422.
@@ -622,7 +626,7 @@ python scripts/seed_manifests.py
 2. **Получить контракт** нужного компонента: `payload_schema` (типы/обязательность) + `example` (образец).
 3. **Заполнить payload** по схеме + примеру (используй `start_time` для последовательного появления).
 4. **Провалидировать**: `POST /components/{slug}/validate` `{"payload": {...}}` → при ошибках поправить.
-5. **Создать презентацию и слайды** (см. API ниже): слайд = `slide_id` (уникальная строка) + `component` + `start_time` + `order_index` + `data.payload`.
+5. **Создать видео и слайды** (см. API ниже): слайд = `slide_id` (уникальная строка) + `component` + `start_time` + `order_index` + `data.payload`.
 6. Расставить слайды с отступами ≥ 2000 мс; в конце — `EndMarkerSlide`.
 
 ### Пример payload (ArchitectureDiagram)
@@ -653,9 +657,9 @@ python scripts/seed_manifests.py
 | GET | `/variants/`, `/variants/{slug}` | варианты отрисовки |
 | GET | `/projects/`, `/projects/{slug}` | проекты |
 | GET/PUT | `/projects/{id}/tokens` | токены темы проекта |
-| GET | `/presentations/`, `/presentations/{id}` | презентации |
-| GET | `/presentations/{id}/tokens` | токены (мерж глобал+проект) презентации |
-| POST | `/presentations/` | создать презентацию |
+| GET | `/presentations/`, `/presentations/{id}` | видео |
+| GET | `/presentations/{id}/tokens` | токены (мерж глобал+проект) видео |
+| POST | `/presentations/` | создать видео |
 | POST | `/presentations/{id}/slides` | создать слайд |
 | PUT | `/presentations/slides/{slide_id}` | обновить слайд |
 | DELETE | `/presentations/slides/{slide_id}` | удалить слайд |
@@ -678,7 +682,7 @@ python scripts/seed_manifests.py
 - **Тайтлы — `<em>` теги** — **ОБЯЗАТЕЛЬНО**: ~половина слов в `title` оборачивается в `<em>`. В tech-варианте `<em>` получает градиент (`brand-light-blue → brand-blue`). Пример: `"Сделка <em>встала</em>"`, `"Без границ — <em>фантазёр</em>"`, `"<em>Результат</em>"`. Пустые тайтлы (ReceiptCard, BrowserMockup, TerminalMockup, OutroSlide) — без изменений.
 - **Разделители слайда** — **ОБЯЗАТЕЛЬНО**: если видимая длина `title` и `subtitle` пуста (после удаления HTML-тегов и пробелов), `HorizontalDivider` и `VerticalDivider` в `Slide.vue` не отображаются.
 - **Не хардкодить стили** в компонентах — только токены/варианты.
-- **Валюта — только €**. Символ ₽ **ЗАПРЕЩЁН** во всех презентациях. Проект работает на евро. `currency` в ReceiptCard и любых других компонентах — только `"€"`.
+- **Валюта — только €**. Символ ₽ **ЗАПРЕЩЁН** во всех видео. Проект работает на евро. `currency` в ReceiptCard и любых других компонентах — только `"€"`.
 - **Эмодзи запрещены** в payload компонентов. В полях `bot_avatar`, `icon`, `value`, `label`, `name` — только Lucide/Heroicons иконки (`lucide:package`, `lucide:clock` и т.п.) или текстовые значения. Unicode-эмодзи (📦🚚💰🤖💸🇩🇪⏱️⚠️) **нельзя**.
 - **Тайтлы без эмодзи** — `<em>` теги и текст, никаких графических символов.
 - **Текст тайтлов — перефразировка** озвучки, а не копирование. Слайд передаёт **смысл**, но слово в слово не повторяет голос. Пример: агент говорит «Менеджеры полдня отвечают на одно и то же» → тайтл «Операционная перегрузка», а не «Менеджеры отвечают на одно и то же».

@@ -48,7 +48,7 @@ const propose = async () => {
 
 const apply = async () => {
   if (!canApply.value) return
-  if (!confirm(`Применить ${proposal.value.ops.length} операций к презентации?`)) return
+  if (!confirm(`Применить ${proposal.value.ops.length} операций к видео?`)) return
   applying.value = true
   message.value = ''
   try {

@@ -31,7 +31,7 @@ const submit = async () => {
     <div class="w-full max-w-sm">
       <div class="bg-white rounded-2xl shadow-xl border border-gray-200 p-6 md:p-8">
         <h1 class="text-2xl font-bold text-gray-900 mb-1">Вход</h1>
-        <p class="text-sm text-gray-500 mb-6">Войдите, чтобы создавать и редактировать презентации</p>
+        <p class="text-sm text-gray-500 mb-6">Войдите, чтобы создавать и редактировать видео</p>
 
         <form @submit.prevent="submit" class="space-y-4">
           <div>
@@ -73,7 +73,7 @@ const submit = async () => {
       </div>
 
       <p class="text-xs text-gray-400 text-center mt-4">
-        Просмотр презентаций по ссылке доступен без входа.
+        Просмотр видео по ссылке доступен без входа.
       </p>
     </div>
   </div>

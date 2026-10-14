@@ -206,7 +206,7 @@ const handleRename = async () => {
           </div>
 
           <div class="text-sm text-gray-400 mt-2">
-            Презентаций: {{ folder.presentations_count ?? folder.presentations?.length ?? 0 }}
+            Видео: {{ folder.presentations_count ?? folder.presentations?.length ?? 0 }}
           </div>
         </div>
       </div>
@@ -217,7 +217,7 @@ const handleRename = async () => {
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
         </div>
         <h3 class="text-xl font-medium text-gray-800 mb-2">Нет папок</h3>
-        <p class="text-gray-500 mb-6 max-w-md mx-auto">В этом проекте пока нет ни одной папки. Создайте первую, чтобы начать работу.</p>
+        <p class="text-gray-500 mb-6 max-w-md mx-auto">В этом проекте пока нет ни одной папки. Создайте первое, чтобы начать работу.</p>
         <button @click="showCreateFolderModal = true" class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors">
           Создать папку
         </button>

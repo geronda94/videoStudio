@@ -124,7 +124,7 @@ export function useVariant(variantSlug, componentSlug) {
     loadVariants()
   }
 
-  // Дефолтный вариант презентации (provide из MainPresentation). Слайд переопределяет через payload.variant.
+  // Дефолтный вариант видео (provide из MainPresentation). Слайд переопределяет через payload.variant.
   const injectedDefault = inject('defaultVariant', null)
 
   const slug = computed(() => {

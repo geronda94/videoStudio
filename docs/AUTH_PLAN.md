@@ -53,7 +53,7 @@ invited_by FK→users.id?, created_at, scope_folder_id FK→folders.id?`.
 
 | Действие | Гость | viewer | editor | owner | superadmin |
 |---|---|---|---|---|---|
-| Просмотр презентации по ссылке | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Просмотр видео по ссылке | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Список «мои проекты» | — | ✅ | ✅ | ✅ | ✅ |
 | Слайды/данные/медиа (write) | — | — | ✅ | ✅ | ✅ |
 | AI-генерация / рендер | — | — | ✅ | ✅ | ✅ |
@@ -84,10 +84,10 @@ invited_by FK→users.id?, created_at, scope_folder_id FK→folders.id?`.
 Модуль `backend/auth.py` (Ф1: пароли/сессии/`_current_user`; Ф2+: зависимости ролей):
 - `require_user` — валидная сессия/ключ;
 - `project_role(project_id, min_role)` — owner из `projects.owner_id` ∪ `project_members` (+ `scope_folder_id` в Ф4);
-- `presentation_role(pres_id, min_role)` — резолв презентация → `folder_presentation` → `projects` → роль;
+- `presentation_role(pres_id, min_role)` — резолв видео → `folder_presentation` → `projects` → роль;
 - `require_style_owner(...)` — токены/палитра только владелец.
 
-Маппинг: read презентаций (`visibility=public`) — публично; write — `editor`+;
+Маппинг: read видео (`visibility=public`) — публично; write — `editor`+;
 стиль/токены/палитра/команда — `owner`. Применить ко всем роутерам:
 `presentations.py`, `ai.py`, `renders.py`, `components.py`, `variants.py`,
 `presets.py`, `api_keys.py` (сейчас create/list/revoke без auth — закрыть).
@@ -119,8 +119,8 @@ invited_by FK→users.id?, created_at, scope_folder_id FK→folders.id?`.
 - **Ф1 — DONE.** `users`/`user_sessions`, `backend/auth.py` (scrypt, cookie+CSRF), `/auth/register|login|logout|me`, `useAuth`, `/login`, `/register`, AuthMenu.
 - **Ф2 — DONE.** `project_members` + `permissions.py::enforce_write` на всех роутерах: аноним → 401, каталог → только супер-админ, `/projects` → владелец, `/presentations` → editor (стиль/токены/палитра → owner), `/ai`+`/renders` → editor; loopback render-воркера пропускается. Team-endpoints + секция «Команда» в `ProjectSettings`, режим просмотра (`GET /presentations/{id}/access`). Админ — bootstrap из `ADMIN_EMAIL`/`ADMIN_PASSWORD` (не «первый зарегистрированный»).
 - **Ф3 — DONE.** Строгий CSRF (double-submit) на мутациях, смена пароля `POST /auth/password` (+`/account`), scoping `GET /presentations/`.
-- **Ф4a — DONE.** `presentations.visibility` (public/private, только владелец; toggle в настройках презентации), приватные скрыты из списка и отдают 404 анониму; закрыта утечка `GET /projects/{id}/media`; `DELETE/PATCH /renders/{job_id}` привязаны к презентации (редактор).
-- **Ф4b — DONE.** `project_members.scope_folder_id`: участник с папкой получает роль только для презентаций этой папки; `presentation_role` учитывает папки, membership API принимает `scope_folder_id`, `GET /projects/{id}/folders`, в UI — выбор папки у участника и при добавлении.
+- **Ф4a — DONE.** `presentations.visibility` (public/private, только владелец; toggle в настройках видео), приватные скрыты из списка и отдают 404 анониму; закрыта утечка `GET /projects/{id}/media`; `DELETE/PATCH /renders/{job_id}` привязаны к видео (редактор).
+- **Ф4b — DONE.** `project_members.scope_folder_id`: участник с папкой получает роль только для видео этой папки; `presentation_role` учитывает папки, membership API принимает `scope_folder_id`, `GET /projects/{id}/folders`, в UI — выбор папки у участника и при добавлении.
 - **Ф5 — DONE.** Админка пользователей `/admin/users` (супер-админ): список, блокировка, выдача/снятие админа, сброс пароля; защита от самоблокировки. UI API-ключей в `/account` (создать/список/отозвать, плейнтекст один раз). Гигиена: очистка истёкших сессий на старте, CSRF на `/auth/logout`, защита `/admin/*` (только админ).
 - **Сервисные скрипты.** `scripts/_api_auth.py` (импортируется сайд-эффектом в 17 скриптов)
   прокидывает `X-Internal-Token` в `requests` — **только для локальных хостов** (не для

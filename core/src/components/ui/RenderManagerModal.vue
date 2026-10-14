@@ -433,7 +433,7 @@ const formatDate = (ds) => {
             v-if="renderJobs.length === 0"
             class="text-center py-12 text-text-muted"
           >
-            Нет истории рендеров для этой презентации.
+            Нет истории рендеров для этого видео.
           </div>
 
           <div v-else class="space-y-4">

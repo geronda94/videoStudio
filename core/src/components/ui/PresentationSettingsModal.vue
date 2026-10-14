@@ -52,7 +52,7 @@ const loadPaletteInfo = async () => {
 
 const applyPalette = async () => {
   if (!props.presentationId || !palSel.value || palBusy.value) return;
-  if (!confirm(`Взять палитру «${palSel.value}» только для этой презентации? Проект не изменится.`)) return;
+  if (!confirm(`Взять палитру «${palSel.value}» только для этого видео? Проект не изменится.`)) return;
   palBusy.value = true;
   palMsg.value = "";
   try {
@@ -69,7 +69,7 @@ const applyPalette = async () => {
 
 const resetPalette = async () => {
   if (!props.presentationId || palBusy.value) return;
-  if (!confirm("Сбросить палитру презентации? Она снова начнёт наследовать палитру проекта.")) return;
+  if (!confirm("Сбросить палитру видео? Она снова начнёт наследовать палитру проекта.")) return;
   palBusy.value = true;
   try {
     await clearPresentationPalette(Number(props.presentationId));
@@ -144,7 +144,7 @@ watch(() => props.presetInfo, syncAll, { deep: true });
       class="relative bg-bg-surface border border-text-muted rounded-2xl w-full max-w-md shadow-2xl overflow-hidden"
     >
       <div class="flex items-center justify-between p-5 border-b border-text-muted">
-        <h2 class="text-lg font-bold text-text-primary">⚙️ Настройки презентации</h2>
+        <h2 class="text-lg font-bold text-text-primary">⚙️ Настройки видео</h2>
         <button
           @click="emit('close')"
           class="text-text-secondary hover:text-text-primary transition-colors text-xl leading-none px-1"
@@ -225,10 +225,10 @@ watch(() => props.presetInfo, syncAll, { deep: true });
           </div>
         </section>
 
-        <!-- Палитра презентации -->
+        <!-- Палитра видео -->
         <section v-if="tab === 'theme'">
           <h3 class="text-xs font-bold uppercase tracking-wider text-text-secondary mb-2">
-            Палитра презентации
+            Палитра видео
           </h3>
           <p class="text-xs text-text-muted mb-2">
             <template v-if="paletteSource">своя: {{ paletteSource }} ({{ paletteCount }} токенов)</template>
@@ -299,7 +299,7 @@ watch(() => props.presetInfo, syncAll, { deep: true });
         <section v-if="tab === 'view'" class="flex items-center justify-between">
           <div>
             <h3 class="text-xs font-bold uppercase tracking-wider text-text-secondary">
-              Приватная презентация
+              Приватное видео
             </h3>
             <p class="text-xs text-text-muted mt-0.5">
               Вкл — по ссылке видят только владелец и участники. Выкл — просмотр открыт всем.

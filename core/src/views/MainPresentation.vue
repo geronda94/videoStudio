@@ -218,7 +218,7 @@ const renderHeight = urlParams.get("h") ? parseInt(urlParams.get("h"), 10) : nul
 const activeFolderData = ref(null);
 
 // AUTH_PLAN Ф2: режим просмотра. При AUTH_MODE=on редактор доступен только
-// owner/editor презентации; иначе (off) — как раньше, всем.
+// owner/editor видео; иначе (off) — как раньше, всем.
 const { authMode } = useAuth();
 const accessInfo = ref({ can_edit: false, can_style: false, role: null });
 
@@ -370,7 +370,7 @@ const handleOpenRenderManager = () => {
   showRenderManagerModal.value = true;
 };
 
-// Дефолтный вариант отрисовки презентации (слайд может переопределить через payload.variant).
+// Дефолтный вариант отрисовки видео (слайд может переопределить через payload.variant).
 const defaultVariant = computed(() => activeFolderData.value?.variant || null);
 provide("defaultVariant", defaultVariant);
 
@@ -456,15 +456,15 @@ const loadCurrent = async (slug) => {
   currentFolder.value = slug || currentFolder.value;
   loading.value = true;
   try {
-    // Публичный просмотр по ссылке: тянем презентацию НАПРЯМУЮ по id.
+    // Публичный просмотр по ссылке: тянем видео НАПРЯМУЮ по id.
     // Список GET /presentations/ при AUTH_MODE=on скоупится и может не содержать
-    // презентацию чужого проекта — тогда страница падала на presentations[0]
+    // видео чужого проекта — тогда страница падала на presentations[0]
     // (чужой стиль + застывший первый слайд, в т.ч. в рендере).
     let found = null;
     const numericId = /^\d+$/.test(String(currentFolder.value));
     if (numericId) {
-      // числовой slug = id презентации: тянем напрямую. Если недоступна/нет —
-      // НЕ подменяем первой презентацией из списка (иначе чужой контент/стиль).
+      // числовой slug = id видео: тянем напрямую. Если недоступна/нет —
+      // НЕ подменяем первой видео из списка (иначе чужой контент/стиль).
       found = await fetchPresentation(Number(currentFolder.value)).catch(() => null);
     } else {
       // legacy: slug не число — ищем по списку
@@ -490,7 +490,7 @@ const loadCurrent = async (slug) => {
         const endMarker = await createSlide(folder.id, {
           slide_id: `slide_${Date.now()}_end`,
           component: "EndMarkerSlide",
-          title: "Конец презентации",
+          title: "Конец видео",
           start_time: endTime,
           order_index: folder.slides.length,
         });
@@ -500,8 +500,8 @@ const loadCurrent = async (slug) => {
       }
     };
 
-    // Сброс прежней презентации ДО присвоения новой: аудио-движок и плеер
-    // не должны сохранять таймлайн/клипы предыдущей презентации.
+    // Сброс прежней видео ДО присвоения новой: аудио-движок и плеер
+    // не должны сохранять таймлайн/клипы предыдущей видео.
     activeFolderData.value = null;
 
     if (found) {
@@ -511,7 +511,7 @@ const loadCurrent = async (slug) => {
       await checkAndAddEndMarker(found);
     }
 
-    // Фаза 2: применяем тему проекта, к которому относится презентация
+    // Фаза 2: применяем тему проекта, к которому относится видео
     if (activeFolderData.value) {
       await loadThemeForPresentation(activeFolderData.value.id);
     }
@@ -531,7 +531,7 @@ onMounted(() => {
   loadCurrent(route.params.slug || currentFolder.value);
 });
 
-// Переход между презентациями (/p/8 -> /p/9) переиспользует компонент без
+// Переход между видео (/p/8 -> /p/9) переиспользует компонент без
 // повторного mount — перезагружаем данные и сбрасываем аудио предыдущей.
 watch(
   () => route.params.slug,
@@ -543,8 +543,8 @@ watch(
 onUnmounted(() => {
   window.removeEventListener("audio-clip-error", handleAudioClipError);
   window.removeEventListener("presentation:close-all-modals", closeAllModals);
-  // Покидая презентацию — глушим озвучку и чистим таймлайн/слушатели,
-  // чтобы аудио не «протекало» в следующую презентацию.
+  // Покидая видео — глушим озвучку и чистим таймлайн/слушатели,
+  // чтобы аудио не «протекало» в следующую видео.
   try {
     const director = useDirector();
     director.stop();
@@ -807,7 +807,7 @@ const handleEditSlide = (index) => {
     JSON.stringify(editingSlide.value),
   );
   showEditorModal.value = true;
-  // Вектор стилей презентации для бейджа/пикера в редакторе
+  // Вектор стилей видео для бейджа/пикера в редакторе
   editorPreset.value = null;
   if (activeFolderData.value?.id) {
     fetchPresentationStyle(activeFolderData.value.id)
@@ -1119,7 +1119,7 @@ const handleComponentSelect = async (componentSchema) => {
       slide_id: endMarker.slide_id || `slide_${Date.now()}_end`,
       component: endMarker.component || "EndMarkerSlide",
       start_time: endMarker.start_time,
-      title: endMarker.title || "Конец презентации",
+      title: endMarker.title || "Конец видео",
       subtitle: endMarker.subtitle || null,
       layout: endMarker.layout || null,
       order_index: endMarker.order_index,
@@ -1514,7 +1514,7 @@ const handleDeleteSlide = async () => {
 const reloadPresentation = async () => {
   try {
     // напрямую по id: список GET /presentations/ скоупится и может не содержать
-    // презентацию чужого проекта (публичный просмотр/рендер).
+    // видео чужого проекта (публичный просмотр/рендер).
     const found = await fetchPresentation(Number(currentFolder.value)).catch(() => null);
     if (found) {
       found.slides = found.slides || [];

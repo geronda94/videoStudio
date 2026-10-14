@@ -126,12 +126,12 @@
       </div>
     </div>
 
-    <!-- Вектор стилей: только индикатор. Управление — в настройках презентации (⚙),
+    <!-- Вектор стилей: только индикатор. Управление — в настройках видео (⚙),
          чтобы не дублировать пикер в двух местах. -->
     <div
       v-if="presetInfo?.style_preset"
       class="mx-4 mt-3 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-xs text-gray-600 flex items-center gap-2"
-      title="Вектор задаётся в настройках презентации (шестерёнка)"
+      title="Вектор задаётся в настройках видео (шестерёнка)"
     >
       🧭 {{ presetInfo?.preset?.title || presetInfo?.style_preset }}
       <span v-if="presetInfo?.style_lock" title="Вектор залочен">🔒</span>

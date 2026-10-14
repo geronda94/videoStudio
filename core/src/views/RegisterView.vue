@@ -41,7 +41,7 @@ const submit = async () => {
     <div class="w-full max-w-sm">
       <div class="bg-white rounded-2xl shadow-xl border border-gray-200 p-6 md:p-8">
         <h1 class="text-2xl font-bold text-gray-900 mb-1">Регистрация</h1>
-        <p class="text-sm text-gray-500 mb-6">Аккаунт нужен для создания и редактирования презентаций</p>
+        <p class="text-sm text-gray-500 mb-6">Аккаунт нужен для создания и редактирования видео</p>
 
         <form @submit.prevent="submit" class="space-y-4">
           <div>

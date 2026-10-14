@@ -23,11 +23,11 @@ design_tokens   (scoped: project / presentation / slide)   ← тема
 style_variants  (standalone)                               ← варианты отрисовки
 ```
 
-`folder_presentation` — M2M между `folders` и `presentations` (папка может содержать несколько презентаций, презентация — в нескольких папках).
+`folder_presentation` — M2M между `folders` и `presentations` (папка может содержать несколько видео, видео — в нескольких папках).
 
 ---
 
-## 2. Контент-модель (дерево презентации)
+## 2. Контент-модель (дерево видео)
 
 ### `projects` — проект
 | Колонка | Тип | Назначение |
@@ -48,9 +48,9 @@ style_variants  (standalone)                               ← варианты 
 | `theme` | тема папки (визуальная метка; НЕ темизирует слайды) |
 | `icon`, `is_archived` | |
 
-Папка **группирует презентации** и задаёт проектную привязку. Связь с презентациями — M2M (`folder_presentation`).
+Папка **группирует видео** и задаёт проектную привязку. Связь с видео — M2M (`folder_presentation`).
 
-### `presentations` — презентация
+### `presentations` — видео
 | Колонка | Назначение |
 |---|---|
 | `id`, `title` | |
@@ -58,7 +58,7 @@ style_variants  (standalone)                               ← варианты 
 | **`variant`** | **дефолтный вариант отрисовки** (если слайд не задал свой). Напр. `classic` |
 | `created_at`, `is_archived` | |
 
-Презентация = таймлайн слайдов. Привязана к папкам через `folder_presentation`.
+Видео = таймлайн слайдов. Привязана к папкам через `folder_presentation`.
 
 ### `slides` — слайд
 | Колонка | Назначение |
@@ -68,7 +68,7 @@ style_variants  (standalone)                               ← варианты 
 | `presentation_id` → presentations.id | |
 | `component` (str) | **slug компонента** из `components` (напр. `ArchitectureDiagram`) |
 | `start_time` (float) | глобальное время старта, мс |
-| `order_index` (int) | порядок в презентации |
+| `order_index` (int) | порядок в видео |
 | `title`, `subtitle`, `layout` | шапка слайда / раскладка (`col`/`row`) |
 
 ### `slide_data` — данные слайда (payload)
@@ -85,7 +85,7 @@ style_variants  (standalone)                               ← варианты 
 | `action`, `event_type` | тип события (напр. переключение слайда) |
 | `payload` (JSON) | параметры события |
 
-### `media_files` — медиа презентации
+### `media_files` — медиа видео
 | Колонка | Назначение |
 |---|---|
 | `id`, `presentation_id` → presentations.id | |
@@ -183,7 +183,7 @@ global (все NULL)  →  project_id  →  presentation_id  →  slide_id
 | `id`, `slug` (unique), `name`, `description` | |
 | `config` (JSON) | единый конфиг: `item` / `item_primary` / `line` / `surface` + `components.<slug>` override |
 
-- Задаётся на слайде полем payload `variant`, на презентации — `presentations.variant` (дефолт).
+- Задаётся на слайде полем payload `variant`, на видео — `presentations.variant` (дефолт).
 - Резолв: `payload.variant` → `presentations.variant` → `tech`.
 - Применяется composable `useVariant` → CSS-переменные `--item-*`. Подробности — `AGENTS.md` §10.
 
@@ -210,7 +210,7 @@ global (все NULL)  →  project_id  →  presentation_id  →  slide_id
 | Добавить компонент | `.vue` + запись в `componentsRegistry.js` + `seed_components.py` → прогнать генераторы (см. `AGENTS.md` §4.4) |
 | Поменять тип/категорию компонента | таблицы `component_types`/`categories` (+ `component_category`), API `/components/types` \| `/categories` |
 | Сменить тему проекта | `PUT /projects/{id}/tokens` или `seed_tokens.py` |
-| Сменить дефолтный вариант презентации | `PUT /presentations/{id}` с полем `variant` |
+| Сменить дефолтный вариант видео | `PUT /presentations/{id}` с полем `variant` |
 | Назначить вектор/лок | `PUT /presentations/{id}/style` (`{style_preset, style_lock}`; лок без пресета → 400; выход за вектор на save → 422) |
 | Добавить вариант отрисовки | запись в `style_variants` (`seed_variants.py`) |
 | Перегенерировать схему/пример/манифест | `seed_components.py` → `generate_schemas.py` → `generate_examples.py` → `seed_manifests.py` |

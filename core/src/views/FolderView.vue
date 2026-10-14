@@ -76,7 +76,7 @@ const handleCreatePresentation = async () => {
     newPresentationTitle.value = ''
     router.push(`/p/${newPres.id}`)
   } catch (e) {
-    createError.value = 'Ошибка при создании презентации'
+    createError.value = 'Ошибка при создании видео'
   } finally {
     createLoading.value = false
   }
@@ -171,7 +171,7 @@ const dotColor = computed(() =>
         :disabled="loading"
         class="flex-shrink-0 px-4 py-3 rounded-xl font-medium transition-colors shadow-sm border disabled:opacity-50"
         :class="showArchived ? 'bg-gray-800 text-white border-gray-800' : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-100'"
-        :title="showArchived ? 'Скрыть архив' : 'Показать архивные презентации'"
+        :title="showArchived ? 'Скрыть архив' : 'Показать архивные видео'"
       >
         🗄 Архив
       </button>
@@ -180,7 +180,7 @@ const dotColor = computed(() =>
         :disabled="loading"
         class="flex-shrink-0 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium transition-colors shadow-sm disabled:opacity-50"
       >
-        + Создать презентацию
+        + Создать видео
       </button>
     </template>
 
@@ -264,10 +264,10 @@ const dotColor = computed(() =>
         <div class="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-4 text-gray-400">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
         </div>
-        <h3 class="text-xl font-medium text-gray-800 mb-2">Нет презентаций</h3>
-        <p class="text-gray-500 mb-6 max-w-md mx-auto">В этой папке пока нет презентаций. Создайте первую, чтобы начать работу.</p>
+        <h3 class="text-xl font-medium text-gray-800 mb-2">Нет видео</h3>
+        <p class="text-gray-500 mb-6 max-w-md mx-auto">В этой папке пока нет видео. Создайте первое, чтобы начать работу.</p>
         <button @click="showCreateModal = true" class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors">
-          Создать презентацию
+          Создать видео
         </button>
       </div>
       </template>
@@ -275,12 +275,12 @@ const dotColor = computed(() =>
     <!-- Create Presentation Modal -->
     <div v-if="showCreateModal" class="fixed inset-0 bg-gray-900/40 backdrop-blur-sm z-50 flex items-center justify-center">
       <div class="bg-white border border-gray-200 rounded-2xl p-6 w-full max-w-md shadow-xl">
-        <h3 class="text-xl font-bold text-gray-900 mb-4">Создать презентацию</h3>
+        <h3 class="text-xl font-bold text-gray-900 mb-4">Создать видео</h3>
         <p v-if="createError" class="text-sm text-red-600 mb-4">{{ createError }}</p>
         <input
           type="text"
           v-model="newPresentationTitle"
-          placeholder="Название презентации"
+          placeholder="Название видео"
           class="w-full bg-gray-50 border border-gray-300 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 mb-6"
           @keyup.enter="handleCreatePresentation"
           autofocus
@@ -301,8 +301,8 @@ const dotColor = computed(() =>
     <!-- Confirm Delete Modal -->
     <div v-if="showConfirmDeleteModal" class="fixed inset-0 bg-gray-900/40 backdrop-blur-sm z-50 flex items-center justify-center">
       <div class="bg-white border border-gray-200 rounded-2xl p-6 w-full max-w-md shadow-xl">
-        <h3 class="text-xl font-bold text-gray-900 mb-2">Удалить презентацию?</h3>
-        <p class="text-gray-500 mb-6">Презентация "<span class="text-gray-900 font-medium">{{ presentationToDelete?.title }}</span>" будет перемещена в архив. Вы уверены?</p>
+        <h3 class="text-xl font-bold text-gray-900 mb-2">Удалить видео?</h3>
+        <p class="text-gray-500 mb-6">Видео "<span class="text-gray-900 font-medium">{{ presentationToDelete?.title }}</span>" будет перемещено в архив. Вы уверены?</p>
         <div class="flex justify-end gap-3">
           <button @click="showConfirmDeleteModal = false" class="px-4 py-2 hover:bg-gray-100 text-gray-600 rounded-lg transition-colors">Отмена</button>
           <button @click="executeDelete" class="px-5 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors font-medium">
