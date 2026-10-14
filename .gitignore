@@ -1,0 +1,44 @@
+# Environment / secrets
+.env
+
+# Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# Node
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# Generated / large content
+uploads/
+backend/media/
+
+# Дампы БД — в этом форке не храним (свой старт, свой дамп при необходимости)
+dump.sql
+dump.sql.gz
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Agent / dev artifacts (не коммитить)
+.playwright-mcp/
+deploy.log
+qa-*.png
+qa2-*.png
+mob-*.png
+desk-*.png
+screenshot*.png
+qa-*.png
+media-library-fixed.png
+
+# Папки QA-скриншотов агентов
+qa-*/
