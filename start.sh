@@ -1,4 +1,4 @@
 #!/bin/bash
-echo "Запуск инфраструктуры презентаций..."
+echo "Запуск инфраструктуры VideoStudio..."
 docker compose up -d
-echo "Готово! Приложение доступно на http://localhost:5174"
+echo "Готово! Приложение доступно на http://localhost:5175 (API: http://localhost:8002)"

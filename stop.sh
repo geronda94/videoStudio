@@ -1,4 +1,4 @@
 #!/bin/bash
-echo "Остановка инфраструктуры презентаций..."
+echo "Остановка инфраструктуры VideoStudio..."
 docker compose down
 echo "Остановлено!"
